@@ -1,0 +1,104 @@
+erdiagram Retail_Management_System
+
+notation=crowsfoot
+
+// Entity definitions
+entity Customer {
+    Cus_ID key
+    Cus_Name
+    Cus_Address
+    Cus_Email
+    Cus_Phone
+}
+
+entity Invoice {
+    INV_Number key
+    INV_Date
+    Ship_Date
+}
+
+entity Product {
+    Product_ID key
+    Product_Name
+    Category
+    Scale
+    Unit_Price
+    Units_On_Hand
+}
+
+entity Manufacturer {
+    M_Code key
+    Manufacturer_Name
+    Website_URL
+}
+
+entity Order {
+    Order_ID key
+    Order_Date
+    Total_Cost
+}
+
+entity Order_Line {
+    Order_ID key
+    Product_ID key
+    Quantity_Ordered
+    Unit_Cost
+}
+
+entity Line {
+    LINE_Number key
+    INV_Number key
+    Product_ID
+    Quantity_Sold
+    Unit_Price
+}
+
+entity Promotion {
+    Promo_ID key
+    Promo_Type
+}
+
+entity Customer_Promotion {
+    Promo_ID key
+    Cus_ID key
+    P_Code
+    participation_date
+    Response_Status
+}
+
+// Relationships based on business rules
+relationship Generates {
+    Customer[0..N] -> Invoice[1]
+}
+
+relationship Contains {
+    Invoice[1] -> Line[N]
+}
+
+relationship References_Product {
+    Line[N] -> Product[1]
+}
+
+relationship Supplies {
+    Manufacturer[0..N] -> Order[1]
+}
+
+relationship Has_Line_Items {
+    Order[1] -> Order_Line[N]
+}
+
+relationship Uses_Product {
+    Order_Line[N] -> Product[1]
+}
+
+relationship Made_By {
+    Product[N] -> Manufacturer[1]
+}
+
+relationship Receives {
+    Customer[0..N | "recipient"] -> Customer_Promotion[1 | "received"]
+}
+
+relationship Part_Of {
+    Promotion[1 | "campaign"] -> Customer_Promotion[N | "participant"]
+}
